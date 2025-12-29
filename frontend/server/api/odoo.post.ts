@@ -12,14 +12,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const apiKey = config.odooApiKey
+  // 從 cookie 讀取 API key (優先)，fallback 到環境變數(向後相容)
+  const apiKey = getCookie(event, 'odoo_api_key') || config.odooApiKey
   const baseUrl = config.public.odooBaseUrl
   const database = config.public.odooDatabase
 
   if (!apiKey) {
     throw createError({
-      statusCode: 500,
-      statusMessage: 'Odoo API key not configured on server'
+      statusCode: 401,
+      statusMessage: 'Not authenticated. Please login.'
     })
   }
 
@@ -49,6 +50,14 @@ export default defineEventHandler(async (event) => {
   catch (error: any) {
     // 處理錯誤並傳回給客戶端
     console.error('Odoo API Error:', error)
+
+    // 處理 401 specifically to prompt re-login
+    if (error.statusCode === 401 || error.status === 401) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'API key expired or invalid. Please login again.'
+      })
+    }
 
     throw createError({
       statusCode: error.statusCode || 500,

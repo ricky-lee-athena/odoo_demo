@@ -11,7 +11,8 @@ export default defineNuxtConfig({
     // Public keys (exposed to client)
     public: {
       odooBaseUrl: process.env.NUXT_ODOO_BASE_URL || 'http://localhost:8069',
-      odooDatabase: process.env.NUXT_ODOO_DATABASE || ''
+      odooDatabase: process.env.NUXT_ODOO_DATABASE || '',
+      googleOAuthProviderId: process.env.NUXT_GOOGLE_OAUTH_PROVIDER_ID || '3'
     }
   }
 })

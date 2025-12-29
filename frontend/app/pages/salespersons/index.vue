@@ -42,7 +42,8 @@ import type { SalespersonFilters } from '~/types/salesperson'
 
 // Page metadata
 definePageMeta({
-  title: 'Salespersons'
+  title: 'Salespersons',
+  middleware: ['auth']  // Require authentication
 })
 
 // Composables
