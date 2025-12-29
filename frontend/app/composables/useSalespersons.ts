@@ -19,12 +19,7 @@ export function useSalespersons() {
     'crm_team_id',
     'email',
     'phone',
-    'mobile',
     'active',
-    'lead_month_count',
-    'lead_day_count',
-    'assignment_max',
-    'assignment_optout',
     'image_128',
     'image_1920'
   ]
@@ -63,7 +58,7 @@ export function useSalespersons() {
         fields: SALESPERSON_FIELDS,
         limit: params.limit || 100,
         offset: params.offset || 0,
-        order: 'name ASC'
+        order: 'id ASC'  // 使用 id 排序（或移除 order 參數）
       })
 
       salespersons.value = result

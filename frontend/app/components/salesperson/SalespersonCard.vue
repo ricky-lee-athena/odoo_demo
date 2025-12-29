@@ -35,20 +35,20 @@
         <span class="value">{{ teamName }}</span>
       </div>
 
-      <!-- Performance Metrics -->
-      <div class="metrics">
-        <div class="metric">
+      <!-- Performance Metrics (只在欄位存在時顯示) -->
+      <div v-if="hasMetrics" class="metrics">
+        <div v-if="salesperson.lead_month_count !== undefined" class="metric">
           <span class="metric-label">Leads (Month)</span>
           <span class="metric-value">{{ salesperson.lead_month_count }}</span>
         </div>
-        <div class="metric">
+        <div v-if="salesperson.lead_day_count !== undefined" class="metric">
           <span class="metric-label">Leads (Day)</span>
           <span class="metric-value">{{ salesperson.lead_day_count }}</span>
         </div>
       </div>
 
-      <!-- Assignment Info -->
-      <div v-if="salesperson.assignment_max > 0" class="info-item">
+      <!-- Assignment Info (只在欄位存在時顯示) -->
+      <div v-if="salesperson.assignment_max && salesperson.assignment_max > 0" class="info-item">
         <span class="label">Max Assignment:</span>
         <span class="value">{{ salesperson.assignment_max }}</span>
       </div>
@@ -86,13 +86,20 @@ const email = computed(() =>
 )
 
 const phone = computed(() =>
-  props.salesperson.phone || props.salesperson.mobile || null
+  props.salesperson.phone && props.salesperson.phone !== false
+    ? props.salesperson.phone
+    : null
 )
 
 const teamName = computed(() =>
   Array.isArray(props.salesperson.crm_team_id)
     ? props.salesperson.crm_team_id[1]
     : 'No Team'
+)
+
+const hasMetrics = computed(() =>
+  props.salesperson.lead_month_count !== undefined ||
+  props.salesperson.lead_day_count !== undefined
 )
 </script>
 

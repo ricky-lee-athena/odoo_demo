@@ -14,16 +14,15 @@ export interface Salesperson {
   crm_team_id: [number, string] | false // [id, team_name]
   email: string | false
   phone: string | false
-  mobile: string | false
   active: boolean
 
-  // Performance metrics
-  lead_month_count: number
-  lead_day_count: number
+  // Performance metrics (optional - may not exist in all Odoo installations)
+  lead_month_count?: number
+  lead_day_count?: number
 
-  // Assignment configuration
-  assignment_max: number
-  assignment_optout: boolean
+  // Assignment configuration (optional - may not exist in all Odoo installations)
+  assignment_max?: number
+  assignment_optout?: boolean
 
   // Avatar images
   image_128: string | false // base64 encoded image

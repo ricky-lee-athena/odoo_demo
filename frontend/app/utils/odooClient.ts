@@ -16,57 +16,29 @@ export async function odooRequest<T = any>(
   method: string,
   params: Record<string, any> = {}
 ): Promise<T> {
-  const config = useRuntimeConfig()
-  const apiKey = config.public.odooApiKey
-  const baseUrl = config.public.odooBaseUrl
-  const database = config.public.odooDatabase
-
-  if (!apiKey) {
-    throw new OdooClientError('Odoo API key not configured')
-  }
-
-  const url = `${baseUrl}/json/2/${model}/${method}`
-
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    'Authorization': `bearer ${apiKey}`
-  }
-
-  // Add database header if configured (for multi-database setups)
-  if (database) {
-    headers['X-Odoo-Database'] = database
-  }
-
   try {
-    const response = await fetch(url, {
+    // 呼叫 Nuxt Server API 代理（不再直接呼叫 Odoo）
+    const response = await $fetch<T>('/api/odoo', {
       method: 'POST',
-      headers,
-      body: JSON.stringify(params)
+      body: {
+        model,
+        method,
+        params
+      }
     })
 
-    if (!response.ok) {
-      throw new OdooClientError(
-        `HTTP ${response.status}: ${response.statusText}`,
-        response.status
-      )
-    }
-
-    const data: OdooApiResponse<T> = await response.json()
-
-    if (data.error) {
-      throw new OdooClientError(
-        data.error.data?.message || data.error.message,
-        data.error.code,
-        data.error
-      )
-    }
-
-    return data.result as T
+    return response
   }
-  catch (error) {
-    if (error instanceof OdooClientError) {
-      throw error
+  catch (error: any) {
+    // 處理來自 server route 的錯誤
+    if (error.statusCode) {
+      throw new OdooClientError(
+        error.statusMessage || error.message,
+        error.statusCode,
+        error.data
+      )
     }
+
     throw new OdooClientError(
       `Failed to connect to Odoo: ${error instanceof Error ? error.message : 'Unknown error'}`
     )

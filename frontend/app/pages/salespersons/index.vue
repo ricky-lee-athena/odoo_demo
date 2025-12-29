@@ -26,8 +26,8 @@
 
     <!-- Results -->
     <SalespersonList
-      v-else-if="salespersons.length > 0"
-      :salespersons="salespersons"
+      v-else-if="sortedSalespersons.length > 0"
+      :salespersons="sortedSalespersons"
     />
 
     <!-- Empty State -->
@@ -72,6 +72,13 @@ async function handleSearch() {
       : filters.value.activeStatus === 'active'
   })
 }
+
+// 排序後的業務員列表（依姓名排序）
+const sortedSalespersons = computed(() => {
+  return [...salespersons.value].sort((a, b) => {
+    return a.name.localeCompare(b.name)
+  })
+})
 
 // Initial data load
 onMounted(async () => {
