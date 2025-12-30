@@ -36,8 +36,16 @@ python3 -m venv odoo-venv
 
 ### 2. 下載 Odoo 19
 
+本專案使用 Git Subtree 管理 Odoo 19，已經包含在儲存庫中。
+
+若需要重新添加或設定 subtree：
+
 ```bash
-git clone https://github.com/odoo/odoo.git --depth 1 --branch 19.0 --single-branch odoo19
+# 添加 Odoo 遠端儲存庫
+git remote add odoo https://github.com/odoo/odoo.git
+
+# 使用 subtree 添加 Odoo 19
+git subtree add --prefix=odoo19 odoo 19.0 --squash
 ```
 
 ### 3. 安裝 Python 依賴套件
@@ -197,6 +205,16 @@ npm run build
 ```
 
 ### 後端管理
+
+#### 更新 Odoo 19
+
+從 upstream 合併最新的 Odoo 更新：
+
+```bash
+git subtree pull --prefix=odoo19 odoo 19.0 --squash
+```
+
+> **注意**: 更新後記得重新安裝 Python 依賴套件，並重啟 Odoo 服務。
 
 #### 啟動 PostgreSQL
 
